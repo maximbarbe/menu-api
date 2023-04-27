@@ -182,7 +182,7 @@ def analyze_request(request_type, info, info_supplementaire, role, menu, matricu
             show_menu()
             return
         if len(info) >= 3:
-            if info == ["api", "menu", "items"]:
+            if info[0:2] == ["api", "menu"] and info[-1] == "items":
                 show_items(menu, info[2])
                 return
             elif info[0:3] == ["api", "menu", "items"] and len(info) > 3:
@@ -195,7 +195,7 @@ def analyze_request(request_type, info, info_supplementaire, role, menu, matricu
     elif request_type.upper() == "POST":
         if info == ["api", "commandes"] and len(info_supplementaire) != 0:
             creer_commande(info_supplementaire, matricule, menu)
-    elif request_type.upper() == "PUT":
+    elif request_type.upper() == "PUT" and role in ["staff", "admin"]:
         # Ici, on veut s'assurer que l'utilisateur respecte le format de la request.
         if info[0:3] == ["api", "menu", "items"] and isinstance(info[-1], int) and role in ["staff", "admin"]:
             item_id = int(info[-1])
@@ -465,5 +465,5 @@ def test():
     test_process_requete()
     test_show_item_info()
 
-test()
+# test()
 main()
